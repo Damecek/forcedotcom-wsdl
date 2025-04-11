@@ -2788,41 +2788,10 @@ export class CommonEventRequestInformation {}
 
 export class fault {}
 
-export class LoginFault {}
-
-export class InvalidQueryLocatorFault {}
-
-export class InvalidNewPasswordFault {}
-
-export class InvalidOldPasswordFault {}
-
-export class InvalidIdFault {}
-
-export class UnexpectedErrorFault {}
-
-export class InvalidFieldFault {}
-
-export class InvalidSObjectFault {}
-
-export class MalformedQueryFault {}
-
-export class MalformedSearchFault {}
-
 export class sObject {
     type!: string;
     fieldsToNull?: string[];
     Id?: ID;
-}
-
-export class address extends location {
-    city?: string;
-    country?: string;
-    countryCode?: string;
-    geocodeAccuracy?: string;
-    postalCode?: string;
-    state?: string;
-    stateCode?: string;
-    street?: string;
 }
 
 export class location {
@@ -3541,18 +3510,6 @@ export class ProcessRequest {
     nextApproverIds?: ID[];
 }
 
-export class ProcessSubmitRequest extends ProcessRequest {
-    objectId!: ID;
-    submitterId?: ID;
-    processDefinitionNameOrId?: string;
-    skipEntryCriteria?: boolean;
-}
-
-export class ProcessWorkitemRequest extends ProcessRequest {
-    action!: string;
-    workitemId!: ID;
-}
-
 export class PerformQuickActionRequest {
     contextId?: ID;
     quickActionName!: string;
@@ -3616,10 +3573,6 @@ export class DescribeQuickActionParameter {
 
 export class DescribeVisualForceResult {
     domain!: string;
-}
-
-export class ProcessArticleRequest extends ProcessWorkitemRequest {
-    version!: string;
 }
 
 export class ProcessResult {
@@ -4053,10 +4006,6 @@ export class DuplicateResult {
     matchResults!: MatchResult[];
 }
 
-export class DuplicateError extends Error {
-    duplicateResult!: DuplicateResult;
-}
-
 export class DescribeNounResult {
     caseValues!: NameCaseValue[];
     developerName!: string;
@@ -4422,52 +4371,6 @@ export class DescribeLayoutComponent {
     value?: string;
 }
 
-export class FieldComponent extends DescribeLayoutComponent {
-    field!: Field;
-}
-
-export class FieldLayoutComponent extends DescribeLayoutComponent {
-    components!: DescribeLayoutComponent[];
-    fieldType!: fieldType;
-}
-
-export class VisualforcePage extends DescribeLayoutComponent {
-    showLabel!: boolean;
-    showScrollbars!: boolean;
-    suggestedHeight!: string;
-    suggestedWidth!: string;
-    url!: string;
-}
-
-export class Canvas extends DescribeLayoutComponent {
-    displayLocation!: string;
-    referenceId!: string;
-    showLabel!: boolean;
-    showScrollbars!: boolean;
-    suggestedHeight!: string;
-    suggestedWidth!: string;
-}
-
-export class ReportChartComponent extends DescribeLayoutComponent {
-    cacheData!: boolean;
-    contextFilterableField!: string;
-    error!: string;
-    hideOnError!: boolean;
-    includeContext!: boolean;
-    showTitle!: boolean;
-    size!: ReportChartSize;
-}
-
-export class AnalyticsCloudComponent extends DescribeLayoutComponent {
-    error!: string;
-    filter!: string;
-    height!: string;
-    hideOnError!: boolean;
-    showSharing!: boolean;
-    showTitle!: boolean;
-    width!: string;
-}
-
 export class FieldCriteria {
     criteria!: FieldCriterion[];
 }
@@ -4476,10 +4379,6 @@ export class FieldCriterion {
     columnName!: string;
     operand!: string;
     operator!: string;
-}
-
-export class CustomLinkComponent extends DescribeLayoutComponent {
-    customLink!: DescribeLayoutButton;
 }
 
 export class NamedLayoutInfo {
@@ -4590,38 +4489,6 @@ export class Email {
     senderDisplayName?: string;
     subject?: string;
     useSignature?: boolean;
-}
-
-export class MassEmailMessage extends Email {
-    description?: string;
-    targetObjectIds?: ID;
-    templateId!: ID;
-    whatIds?: ID;
-}
-
-export class SingleEmailMessage extends Email {
-    bccAddresses?: string;
-    ccAddresses?: string;
-    charset?: string;
-    documentAttachments!: ID[];
-    entityAttachments!: ID[];
-    fileAttachments!: EmailFileAttachment[];
-    htmlBody?: string;
-    inReplyTo?: string;
-    oneClickPost?: boolean;
-    optOutPolicy?: SendEmailOptOutPolicy;
-    orgWideEmailAddressId?: ID;
-    plainTextBody?: string;
-    references?: string;
-    targetObjectId?: ID;
-    templateId?: ID;
-    templateName?: string;
-    toAddresses?: string;
-    treatBodiesAsTemplate?: boolean;
-    treatTargetObjectAsRecipient?: boolean;
-    unsubscribeComment?: string;
-    unsubscribeUrls?: string[];
-    whatId?: ID;
 }
 
 export class SendEmailResult {
@@ -4747,27 +4614,6 @@ export class ListViewRecordColumn {
 }
 
 export class SoqlWhereCondition {}
-
-export class SoqlCondition extends SoqlWhereCondition {
-    field!: string;
-    operator!: soqlOperator;
-    values!: string[];
-}
-
-export class SoqlNotCondition extends SoqlWhereCondition {
-    condition!: SoqlWhereCondition;
-}
-
-export class SoqlConditionGroup extends SoqlWhereCondition {
-    conditions!: SoqlWhereCondition[];
-    conjunction!: soqlConjunction;
-}
-
-export class SoqlSubQueryCondition extends SoqlWhereCondition {
-    field!: string;
-    operator!: soqlOperator;
-    subQuery!: string;
-}
 
 export class DescribeSearchLayoutResult {
     errorMsg?: string;
@@ -5061,10 +4907,164 @@ export class ApiFault {
     upgradeMessage?: string;
 }
 
+export class LoginFault {}
+
+export class InvalidQueryLocatorFault {}
+
+export class InvalidNewPasswordFault {}
+
+export class InvalidOldPasswordFault {}
+
+export class InvalidIdFault {}
+
+export class UnexpectedErrorFault {}
+
+export class address extends location {
+    city?: string;
+    country?: string;
+    countryCode?: string;
+    geocodeAccuracy?: string;
+    postalCode?: string;
+    state?: string;
+    stateCode?: string;
+    street?: string;
+}
+
+export class ProcessSubmitRequest extends ProcessRequest {
+    objectId!: ID;
+    submitterId?: ID;
+    processDefinitionNameOrId?: string;
+    skipEntryCriteria?: boolean;
+}
+
+export class ProcessWorkitemRequest extends ProcessRequest {
+    action!: string;
+    workitemId!: ID;
+}
+
+export class ProcessArticleRequest extends ProcessWorkitemRequest {
+    version!: string;
+}
+
+export class DuplicateError extends Error {
+    duplicateResult!: DuplicateResult;
+}
+
+export class FieldComponent extends DescribeLayoutComponent {
+    field!: Field;
+}
+
+export class FieldLayoutComponent extends DescribeLayoutComponent {
+    components!: DescribeLayoutComponent[];
+    fieldType!: fieldType;
+}
+
+export class VisualforcePage extends DescribeLayoutComponent {
+    showLabel!: boolean;
+    showScrollbars!: boolean;
+    suggestedHeight!: string;
+    suggestedWidth!: string;
+    url!: string;
+}
+
+export class Canvas extends DescribeLayoutComponent {
+    displayLocation!: string;
+    referenceId!: string;
+    showLabel!: boolean;
+    showScrollbars!: boolean;
+    suggestedHeight!: string;
+    suggestedWidth!: string;
+}
+
+export class ReportChartComponent extends DescribeLayoutComponent {
+    cacheData!: boolean;
+    contextFilterableField!: string;
+    error!: string;
+    hideOnError!: boolean;
+    includeContext!: boolean;
+    showTitle!: boolean;
+    size!: ReportChartSize;
+}
+
+export class AnalyticsCloudComponent extends DescribeLayoutComponent {
+    error!: string;
+    filter!: string;
+    height!: string;
+    hideOnError!: boolean;
+    showSharing!: boolean;
+    showTitle!: boolean;
+    width!: string;
+}
+
+export class CustomLinkComponent extends DescribeLayoutComponent {
+    customLink!: DescribeLayoutButton;
+}
+
+export class MassEmailMessage extends Email {
+    description?: string;
+    targetObjectIds?: ID;
+    templateId!: ID;
+    whatIds?: ID;
+}
+
+export class SingleEmailMessage extends Email {
+    bccAddresses?: string;
+    ccAddresses?: string;
+    charset?: string;
+    documentAttachments!: ID[];
+    entityAttachments!: ID[];
+    fileAttachments!: EmailFileAttachment[];
+    htmlBody?: string;
+    inReplyTo?: string;
+    oneClickPost?: boolean;
+    optOutPolicy?: SendEmailOptOutPolicy;
+    orgWideEmailAddressId?: ID;
+    plainTextBody?: string;
+    references?: string;
+    targetObjectId?: ID;
+    templateId?: ID;
+    templateName?: string;
+    toAddresses?: string;
+    treatBodiesAsTemplate?: boolean;
+    treatTargetObjectAsRecipient?: boolean;
+    unsubscribeComment?: string;
+    unsubscribeUrls?: string[];
+    whatId?: ID;
+}
+
+export class SoqlCondition extends SoqlWhereCondition {
+    field!: string;
+    operator!: soqlOperator;
+    values!: string[];
+}
+
+export class SoqlNotCondition extends SoqlWhereCondition {
+    condition!: SoqlWhereCondition;
+}
+
+export class SoqlConditionGroup extends SoqlWhereCondition {
+    conditions!: SoqlWhereCondition[];
+    conjunction!: soqlConjunction;
+}
+
+export class SoqlSubQueryCondition extends SoqlWhereCondition {
+    field!: string;
+    operator!: soqlOperator;
+    subQuery!: string;
+}
+
 export class ApiQueryFault extends ApiFault {
     row!: number;
     column!: number;
 }
+
+export class InvalidFieldFault {}
+
+export class InvalidSObjectFault {}
+
+export class MalformedQueryFault {}
+
+export class MalformedSearchFault {}
 
 export type ApiSchemaTypes = {
 	ID: ID;
@@ -5356,18 +5356,7 @@ export type ApiSchemaTypes = {
 	OwnerChangeOptions: OwnerChangeOptions;
 	CommonEventRequestInformation: CommonEventRequestInformation;
 	fault: fault;
-	LoginFault: LoginFault;
-	InvalidQueryLocatorFault: InvalidQueryLocatorFault;
-	InvalidNewPasswordFault: InvalidNewPasswordFault;
-	InvalidOldPasswordFault: InvalidOldPasswordFault;
-	InvalidIdFault: InvalidIdFault;
-	UnexpectedErrorFault: UnexpectedErrorFault;
-	InvalidFieldFault: InvalidFieldFault;
-	InvalidSObjectFault: InvalidSObjectFault;
-	MalformedQueryFault: MalformedQueryFault;
-	MalformedSearchFault: MalformedSearchFault;
 	sObject: sObject;
-	address: address;
 	location: location;
 	QueryResult: QueryResult;
 	SetupBriefcaseResult: SetupBriefcaseResult;
@@ -5469,15 +5458,12 @@ export type ApiSchemaTypes = {
 	MergeRequest: MergeRequest;
 	MergeResult: MergeResult;
 	ProcessRequest: ProcessRequest;
-	ProcessSubmitRequest: ProcessSubmitRequest;
-	ProcessWorkitemRequest: ProcessWorkitemRequest;
 	PerformQuickActionRequest: PerformQuickActionRequest;
 	DescribeAvailableQuickActionResult: DescribeAvailableQuickActionResult;
 	DescribeQuickActionResult: DescribeQuickActionResult;
 	DescribeQuickActionDefaultValue: DescribeQuickActionDefaultValue;
 	DescribeQuickActionParameter: DescribeQuickActionParameter;
 	DescribeVisualForceResult: DescribeVisualForceResult;
-	ProcessArticleRequest: ProcessArticleRequest;
 	ProcessResult: ProcessResult;
 	DescribeWorkitemActionResult: DescribeWorkitemActionResult;
 	AllowedWorkitemAction: AllowedWorkitemAction;
@@ -5520,7 +5506,6 @@ export type ApiSchemaTypes = {
 	MatchRecord: MatchRecord;
 	MatchResult: MatchResult;
 	DuplicateResult: DuplicateResult;
-	DuplicateError: DuplicateError;
 	DescribeNounResult: DescribeNounResult;
 	NameCaseValue: NameCaseValue;
 	ObjectMapping: ObjectMapping;
@@ -5569,15 +5554,8 @@ export type ApiSchemaTypes = {
 	DescribeLayoutItem: DescribeLayoutItem;
 	DescribeLayoutButton: DescribeLayoutButton;
 	DescribeLayoutComponent: DescribeLayoutComponent;
-	FieldComponent: FieldComponent;
-	FieldLayoutComponent: FieldLayoutComponent;
-	VisualforcePage: VisualforcePage;
-	Canvas: Canvas;
-	ReportChartComponent: ReportChartComponent;
-	AnalyticsCloudComponent: AnalyticsCloudComponent;
 	FieldCriteria: FieldCriteria;
 	FieldCriterion: FieldCriterion;
-	CustomLinkComponent: CustomLinkComponent;
 	NamedLayoutInfo: NamedLayoutInfo;
 	RecordTypeInfo: RecordTypeInfo;
 	RecordTypeMapping: RecordTypeMapping;
@@ -5592,8 +5570,6 @@ export type ApiSchemaTypes = {
 	HandledEmailMessage: HandledEmailMessage;
 	EmailFileAttachment: EmailFileAttachment;
 	Email: Email;
-	MassEmailMessage: MassEmailMessage;
-	SingleEmailMessage: SingleEmailMessage;
 	SendEmailResult: SendEmailResult;
 	DescribeListViewResult: DescribeListViewResult;
 	DescribeListView: DescribeListView;
@@ -5612,10 +5588,6 @@ export type ApiSchemaTypes = {
 	ListViewRecord: ListViewRecord;
 	ListViewRecordColumn: ListViewRecordColumn;
 	SoqlWhereCondition: SoqlWhereCondition;
-	SoqlCondition: SoqlCondition;
-	SoqlNotCondition: SoqlNotCondition;
-	SoqlConditionGroup: SoqlConditionGroup;
-	SoqlSubQueryCondition: SoqlSubQueryCondition;
 	DescribeSearchLayoutResult: DescribeSearchLayoutResult;
 	DescribeSearchScopeOrderResult: DescribeSearchScopeOrderResult;
 	DescribeSearchableEntityResult: DescribeSearchableEntityResult;
@@ -5653,5 +5625,33 @@ export type ApiSchemaTypes = {
 	MatchOptions: MatchOptions;
 	OwnerChangeOption: OwnerChangeOption;
 	ApiFault: ApiFault;
+	LoginFault: LoginFault;
+	InvalidQueryLocatorFault: InvalidQueryLocatorFault;
+	InvalidNewPasswordFault: InvalidNewPasswordFault;
+	InvalidOldPasswordFault: InvalidOldPasswordFault;
+	InvalidIdFault: InvalidIdFault;
+	UnexpectedErrorFault: UnexpectedErrorFault;
+	address: address;
+	ProcessSubmitRequest: ProcessSubmitRequest;
+	ProcessWorkitemRequest: ProcessWorkitemRequest;
+	ProcessArticleRequest: ProcessArticleRequest;
+	DuplicateError: DuplicateError;
+	FieldComponent: FieldComponent;
+	FieldLayoutComponent: FieldLayoutComponent;
+	VisualforcePage: VisualforcePage;
+	Canvas: Canvas;
+	ReportChartComponent: ReportChartComponent;
+	AnalyticsCloudComponent: AnalyticsCloudComponent;
+	CustomLinkComponent: CustomLinkComponent;
+	MassEmailMessage: MassEmailMessage;
+	SingleEmailMessage: SingleEmailMessage;
+	SoqlCondition: SoqlCondition;
+	SoqlNotCondition: SoqlNotCondition;
+	SoqlConditionGroup: SoqlConditionGroup;
+	SoqlSubQueryCondition: SoqlSubQueryCondition;
 	ApiQueryFault: ApiQueryFault;
+	InvalidFieldFault: InvalidFieldFault;
+	InvalidSObjectFault: InvalidSObjectFault;
+	MalformedQueryFault: MalformedQueryFault;
+	MalformedSearchFault: MalformedSearchFault;
 }

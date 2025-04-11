@@ -85,6 +85,7 @@ const reservedWords = [
 
 export function convertWsdlToTypescript(wsdl: string): string {
     let output = '';
+    const isClass = true;
 
     parseString(
         wsdl
@@ -111,7 +112,14 @@ export function convertWsdlToTypescript(wsdl: string): string {
                 ...arr.flatMap((a) => a.element).filter((x) => x),
                 ...arr.flatMap<ComplexTypeNode>((a) => a.complexType).filter((x) => x),
             ]);
-            output += writeTypeMap(map, true);
+            // Sort the map to prevent TS2449 errors
+            if (isClass) {
+                const sortedMap = sortClassMapForDependencies(map);
+                output += writeClassMap(sortedMap);
+            } else {
+                const sortedMap = sortTypeMapForDependencies(map);
+                output += writeTypeMap(sortedMap);
+            }
         }
     );
 
@@ -227,6 +235,166 @@ function treatComplexTypeNode(
     return typeMap;
 }
 
+/**
+ * Sorts the type map to prevent TS2449 errors (Class used before its declaration)
+ * The sorting order is:
+ * 1. Classes without extends (no parents)
+ * 2. Classes with extends that are extended by other classes
+ * 3. Classes with extends that aren't extended by any other classes
+ */
+function sortTypeMapForDependencies(
+    typeMap: Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>
+): Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }> {
+    // Create a new map to store the sorted result
+    const sortedMap = new Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>();
+
+    // Create a map to track which classes are extended by others
+    const extendedByMap = new Map<string, string[]>();
+
+    // Initialize the extendedByMap
+    typeMap.forEach((info, type) => {
+        // Process each parent of this type
+        info.parents.forEach(parent => {
+            const normalizedParent = treatTypeName(parent);
+            if (!extendedByMap.has(normalizedParent)) {
+                extendedByMap.set(normalizedParent, []);
+            }
+            extendedByMap.get(normalizedParent)!.push(type);
+        });
+    });
+
+    // 1. First add classes without extends (no parents)
+    typeMap.forEach((info, type) => {
+        if (info.parents.length === 0) {
+            sortedMap.set(type, info);
+        }
+    });
+
+    // 2. Then add classes with extends that are extended by other classes
+    typeMap.forEach((info, type) => {
+        if (info.parents.length > 0 && extendedByMap.has(type) && extendedByMap.get(type)!.length > 0) {
+            if (!sortedMap.has(type)) {
+                sortedMap.set(type, info);
+            }
+        }
+    });
+
+    // 3. Finally add classes with extends that aren't extended by any other classes
+    typeMap.forEach((info, type) => {
+        if (!sortedMap.has(type)) {
+            sortedMap.set(type, info);
+        }
+    });
+
+    return sortedMap;
+}
+
+/**
+ * Sorts the type map to prevent TS2449 errors (Class used before its declaration)
+ * Uses a more robust approach to ensure base classes are defined before derived classes
+ */
+function sortClassMapForDependencies(
+    typeMap: Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>
+): Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }> {
+    // Create a new map to store the sorted result
+    const sortedMap = new Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>();
+
+    // First, collect all class names and normalize parent names
+    const allClasses = new Set<string>();
+    const parentMap = new Map<string, string[]>();
+
+    typeMap.forEach((info, type) => {
+        allClasses.add(type);
+
+        // Normalize parent names and filter out parents that aren't in our typeMap
+        const normalizedParents = info.parents
+            .map(parent => treatTypeName(parent))
+            .filter(parent => typeMap.has(parent) || parent === type);
+
+        parentMap.set(type, normalizedParents);
+    });
+
+    // Create a map of classes that extend each class
+    const childrenMap = new Map<string, string[]>();
+    allClasses.forEach(className => {
+        childrenMap.set(className, []);
+    });
+
+    parentMap.forEach((parents, className) => {
+        parents.forEach(parent => {
+            if (childrenMap.has(parent) && parent !== className) {
+                childrenMap.get(parent)!.push(className);
+            }
+        });
+    });
+
+    // Note: We're using a simpler approach that doesn't require tracking all descendants
+
+    // Process classes in batches
+    const processed = new Set<string>();
+    const result: string[] = [];
+
+    // First, add classes with no parents
+    typeMap.forEach((info, type) => {
+        if (parentMap.get(type)?.length === 0) {
+            result.push(type);
+            processed.add(type);
+        }
+    });
+
+    // Then process remaining classes
+    while (processed.size < allClasses.size) {
+        let progress = false;
+
+        // Find classes whose parents are all processed
+        allClasses.forEach(className => {
+            if (processed.has(className)) return;
+
+            const parents = parentMap.get(className) || [];
+            const allParentsProcessed = parents.every(parent => processed.has(parent));
+
+            if (allParentsProcessed) {
+                result.push(className);
+                processed.add(className);
+                progress = true;
+            }
+        });
+
+        // If we can't make progress, we have a cycle
+        // Break the cycle by adding a class that has the fewest unprocessed parents
+        if (!progress && processed.size < allClasses.size) {
+            let bestClass = '';
+            let minUnprocessedParents = Number.MAX_SAFE_INTEGER;
+
+            allClasses.forEach(className => {
+                if (processed.has(className)) return;
+
+                const parents = parentMap.get(className) || [];
+                const unprocessedParents = parents.filter(parent => !processed.has(parent));
+
+                if (unprocessedParents.length < minUnprocessedParents) {
+                    minUnprocessedParents = unprocessedParents.length;
+                    bestClass = className;
+                }
+            });
+
+            if (bestClass) {
+                result.push(bestClass);
+                processed.add(bestClass);
+            }
+        }
+    }
+
+    // Build the sorted map using the result order
+    result.forEach(type => {
+        if (typeMap.has(type)) {
+            sortedMap.set(type, typeMap.get(type)!);
+        }
+    });
+
+    return sortedMap;
+}
+
 function writeClassMap(typeMap: Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>) {
     let output = '';
 
@@ -274,10 +442,8 @@ function writeClassMap(typeMap: Map<string, { parents: string[]; fields: Sequenc
 }
 
 function writeTypeMap(
-    typeMap: Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>,
-    shouldGenerateClasses: boolean
+    typeMap: Map<string, { parents: string[]; fields: SequenceNode[] | NodeWithAttributes[] }>
 ): string {
-    if (shouldGenerateClasses) return writeClassMap(typeMap);
     let output = '';
 
     typeMap.forEach((info, type) => {
@@ -322,7 +488,7 @@ function writeTypeMap(
 }
 
 function treatAttribute(elementNode: NodeWithAttributes): string {
-  let attributeOutput = '';
+    let attributeOutput = '';
 
     const {name: fieldName, type: fieldTypeXml, minOccurs, maxOccurs, nillable} = elementNode.$;
 
@@ -341,9 +507,9 @@ function treatAttribute(elementNode: NodeWithAttributes): string {
         attributeOutput += fieldType;
     }
 
-  attributeOutput += ';\n';
+    attributeOutput += ';\n';
 
-  return attributeOutput;
+    return attributeOutput;
 }
 
 function translateTypeName(fieldTypeXml: string): string {
