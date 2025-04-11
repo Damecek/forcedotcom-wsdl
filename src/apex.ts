@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2023, salesforce.com, inc.
- * All rights reserved.
- * Licensed under the BSD 3-Clause license.
- * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
- */
 export type FlowProcessType = 'AutoLaunchedFlow'
       |'Flow'
       |'Workflow'
@@ -42,6 +36,12 @@ export type FlowProcessType = 'AutoLaunchedFlow'
       |'IndicatorResultFlow'
       |'IndividualObjectLinkingFlow'
       |'PromptFlow'
+      |'ApprovalWorkflow'
+      |'DcvrFrameworkDataCaptureFlow'
+      |'ActivityObjectMatchingFlow'
+      |'ActionableEventManagementFlow'
+      |'StageManagementEvaluationFlow'
+      |'RpaFlow'
 
 export type PerfOption = 'NONE'
       |'MINIMUM'
@@ -56,6 +56,7 @@ export type LogCategory = 'Db'
       |'System'
       |'Wave'
       |'Nba'
+      |'Data_Access'
       |'All'
 
 export type LogCategoryLevel = 'None'
@@ -74,226 +75,227 @@ export type LogType = 'None'
       |'Callout'
       |'Detail'
 
-export type ID = string
+export class ID {}
 
-export type AllowFieldTruncationHeader = string
+export class AllowFieldTruncationHeader {}
 
-export type CallOptions = string
+export class CallOptions {}
 
-export type DebuggingHeader = string
+export class DebuggingHeader {}
 
-export type DebuggingInfo = string
+export class DebuggingInfo {}
 
-export type DisableFeedTrackingHeader = string
+export class DisableFeedTrackingHeader {}
 
-export type PackageVersionHeader = string
+export class PackageVersionHeader {}
 
-export type SessionHeader = string
+export class SessionHeader {}
 
-export type compileAndTest = string
+export class compileAndTest {}
 
-export type compileAndTestResponse = string
+export class compileAndTestResponse {}
 
-export type compileClasses = string
+export class compileClasses {}
 
-export type compileClassesResponse = string
+export class compileClassesResponse {}
 
-export type compileTriggers = string
+export class compileTriggers {}
 
-export type compileTriggersResponse = string
+export class compileTriggersResponse {}
 
-export type executeAnonymous = string
+export class executeAnonymous {}
 
-export type executeAnonymousResponse = string
+export class executeAnonymousResponse {}
 
-export type runTests = string
+export class runTests {}
 
-export type runTestsResponse = string
+export class runTestsResponse {}
 
-export type wsdlToApex = string
+export class wsdlToApex {}
 
-export type wsdlToApexResponse = string
+export class wsdlToApexResponse {}
 
-export type CompileAndTestRequest = {
-    checkOnly: boolean;
-    classes: string[];
-    deleteClasses: string[];
-    deleteTriggers: string[];
+export class CompileAndTestRequest {
+    checkOnly!: boolean;
+    classes!: string[];
+    deleteClasses!: string[];
+    deleteTriggers!: string[];
     runTestsRequest?: RunTestsRequest;
-    triggers: string[];
+    triggers!: string[];
 }
 
-export type RunTestsRequest = {
-    allTests: boolean;
-    classes: string[];
+export class RunTestsRequest {
+    allTests!: boolean;
+    classes!: string[];
     maxFailedTests?: number;
-    namespace: string;
-    packages: string[];
+    namespace!: string;
+    packages!: string[];
     skipCodeCoverage?: boolean;
-    tests: TestsNode[];
+    tests!: TestsNode[];
 }
 
-export type TestsNode = {
-    classId: string;
-    className: string;
-    testMethods: string[];
+export class TestsNode {
+    classId!: string;
+    className!: string;
+    testMethods!: string[];
 }
 
-export type CompileAndTestResult = {
-    classes: CompileClassResult[];
-    deleteClasses: DeleteApexResult[];
-    deleteTriggers: DeleteApexResult[];
-    runTestsResult: RunTestsResult;
-    success: boolean;
-    triggers: CompileTriggerResult[];
+export class CompileAndTestResult {
+    classes!: CompileClassResult[];
+    deleteClasses!: DeleteApexResult[];
+    deleteTriggers!: DeleteApexResult[];
+    runTestsResult!: RunTestsResult;
+    success!: boolean;
+    triggers!: CompileTriggerResult[];
 }
 
-export type CompileClassResult = {
+export class CompileClassResult {
     bodyCrc?: number;
-    column: number;
+    column!: number;
     id?: ID;
-    line: number;
+    line!: number;
     name?: string;
     problem?: string;
     problems?: CompileIssue[];
-    success: boolean;
+    success!: boolean;
     warnings?: CompileIssue[];
 }
 
-export type CompileIssue = {
+export class CompileIssue {
     column?: number;
     line?: number;
     message?: string;
 }
 
-export type DeleteApexResult = {
+export class DeleteApexResult {
     id?: ID;
     problem?: string;
-    success: boolean;
+    success!: boolean;
 }
 
-export type RunTestsResult = {
+export class RunTestsResult {
     apexLogId?: string;
-    codeCoverage: CodeCoverageResult[];
-    codeCoverageWarnings: CodeCoverageWarning[];
-    failures: RunTestFailure[];
-    flowCoverage: FlowCoverageResult[];
-    flowCoverageWarnings: FlowCoverageWarning[];
-    numFailures: number;
-    numTestsRun: number;
-    successes: RunTestSuccess[];
-    totalTime: number;
+    codeCoverage!: CodeCoverageResult[];
+    codeCoverageWarnings!: CodeCoverageWarning[];
+    failures!: RunTestFailure[];
+    flowCoverage!: FlowCoverageResult[];
+    flowCoverageWarnings!: FlowCoverageWarning[];
+    numFailures!: number;
+    numTestsRun!: number;
+    successes!: RunTestSuccess[];
+    totalTime!: number;
 }
 
-export type CodeCoverageResult = {
-    id: ID;
-    locationsNotCovered: CodeLocation[];
-    name: string;
+export class CodeCoverageResult {
+    id!: ID;
+    locationsNotCovered!: CodeLocation[];
+    name!: string;
     namespace?: string;
-    numLocations: number;
-    numLocationsNotCovered: number;
-    type: string;
+    numLocations!: number;
+    numLocationsNotCovered!: number;
+    type!: string;
 }
 
-export type CodeLocation = {
-    column: number;
-    line: number;
-    numExecutions: number;
-    time: number;
+export class CodeLocation {
+    column!: number;
+    line!: number;
+    numExecutions!: number;
+    time!: number;
 }
 
-export type CodeCoverageWarning = {
-    id: ID;
-    message: string;
+export class CodeCoverageWarning {
+    id!: ID;
+    message!: string;
     name?: string;
     namespace?: string;
 }
 
-export type RunTestFailure = {
-    id: ID;
-    message: string;
+export class RunTestFailure {
+    id!: ID;
+    message!: string;
     methodName?: string;
-    name: string;
+    name!: string;
     namespace?: string;
     seeAllData?: boolean;
     stackTrace?: string;
-    time: number;
-    type: string;
+    time!: number;
+    type!: string;
 }
 
-export type FlowCoverageResult = {
-    elementsNotCovered: string[];
-    flowId: string;
-    flowName: string;
+export class FlowCoverageResult {
+    elementsNotCovered!: string[];
+    flowId!: string;
+    flowName!: string;
     flowNamespace?: string;
-    numElements: number;
-    numElementsNotCovered: number;
-    processType: FlowProcessType;
+    numElements!: number;
+    numElementsNotCovered!: number;
+    processType!: FlowProcessType;
 }
 
-export type FlowCoverageWarning = {
+export class FlowCoverageWarning {
     flowId?: string;
     flowName?: string;
     flowNamespace?: string;
-    message: string;
+    message!: string;
 }
 
-export type RunTestSuccess = {
-    id: ID;
-    methodName: string;
-    name: string;
+export class RunTestSuccess {
+    id!: ID;
+    methodName!: string;
+    name!: string;
     namespace?: string;
     seeAllData?: boolean;
-    time: number;
+    time!: number;
 }
 
-export type CompileTriggerResult = {
+export class CompileTriggerResult {
     bodyCrc?: number;
-    column: number;
+    column!: number;
     id?: ID;
-    line: number;
+    line!: number;
     name?: string;
     problem?: string;
     problems?: CompileIssue[];
-    success: boolean;
+    success!: boolean;
     warnings?: CompileIssue[];
 }
 
-export type ExecuteAnonymousResult = {
-    column: number;
+export class ExecuteAnonymousResult {
+    column!: number;
     compileProblem?: string;
-    compiled: boolean;
+    compiled!: boolean;
     exceptionMessage?: string;
     exceptionStackTrace?: string;
-    line: number;
-    success: boolean;
+    line!: number;
+    success!: boolean;
 }
 
-export type WsdlToApexInfo = {
-    mapping: NamespacePackagePair[];
-    wsdl: string;
+export class WsdlToApexInfo {
+    mapping!: NamespacePackagePair[];
+    wsdl!: string;
 }
 
-export type NamespacePackagePair = {
-    namespace: string;
-    packageName: string;
+export class NamespacePackagePair {
+    namespace!: string;
+    packageName!: string;
 }
 
-export type WsdlToApexResult = {
-    apexScripts: string[];
-    errors: string[];
-    success: boolean;
+export class WsdlToApexResult {
+    apexScripts!: string[];
+    errors!: string[];
+    success!: boolean;
 }
 
-export type LogInfo = {
-    category: LogCategory;
-    level: LogCategoryLevel;
+export class LogInfo {
+    category!: LogCategory;
+    level!: LogCategoryLevel;
 }
 
-export type PackageVersion = {
-    majorNumber: number;
-    minorNumber: number;
-    namespace: string;
+export class PackageVersion {
+    majorNumber!: number;
+    minorNumber!: number;
+    namespace!: string;
+    packageId!: string;
 }
 
 export type ApiSchemaTypes = {
